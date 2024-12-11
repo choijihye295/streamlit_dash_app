@@ -39,7 +39,7 @@ st.markdown("""
                 right: 0.5rem;
             }
             .stMarkdown {
-                overflow-x: hidden;
+                overflow: hidden;  /* 스크롤 제거 */
             }
         }
         
@@ -56,8 +56,7 @@ st.markdown("""
             padding: 1rem;
             border-radius: 0.5rem;
             text-align: center;
-            height: 100%;
-            margin-bottom: 0.5rem;
+            margin: 0.5rem;
         }
         .metric-label {
             color: #666;
