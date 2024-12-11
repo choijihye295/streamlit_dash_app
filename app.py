@@ -175,12 +175,11 @@ def create_combined_graph(historical_data, prediction_data):
         secondary_y=True,
     )
 
-    # 현재 시점을 나타내는 수직선 및 텍스트 추가
+    # 현재 시점을 나타내는 수직선 추가
     current_time = historical_data['저장시간'].iloc[-1]
-
     fig.update_layout(
         margin=dict(l=50, r=50, t=30, b=30),
-        height=600,  # 고정 높이
+        height=600,
         plot_bgcolor='white',
         paper_bgcolor='white',
         font=dict(size=12),
@@ -196,7 +195,9 @@ def create_combined_graph(historical_data, prediction_data):
             gridcolor='lightgray',
             showline=True,
             linewidth=1,
-            linecolor='lightgray'
+            linecolor='lightgray',
+            rangeslider=dict(visible=True),  # 가로 스크롤 활성화
+            tickformat="%H:%M"  # 시간 포맷
         ),
         yaxis=dict(
             showgrid=True,
@@ -214,7 +215,6 @@ def create_combined_graph(historical_data, prediction_data):
             title_text="습도 (%)"
         ),
         shapes=[
-            # 현재 시점을 나타내는 수직선
             dict(
                 type="line",
                 xref="x",
@@ -231,7 +231,6 @@ def create_combined_graph(historical_data, prediction_data):
             )
         ],
         annotations=[
-            # 현재 시점 텍스트
             dict(
                 x=current_time,
                 y=1.05,
@@ -244,11 +243,12 @@ def create_combined_graph(historical_data, prediction_data):
         ]
     )
 
-    # y축 제목 업데이트
+    # y축 제목 설정
     fig.update_yaxes(title_text="온도 (°C)", secondary_y=False)
     fig.update_yaxes(title_text="습도 (%)", secondary_y=True)
 
     return fig
+
 
 
 
