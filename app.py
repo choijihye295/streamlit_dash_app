@@ -4,6 +4,13 @@ import datetime
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+# `저장시간`이 Timestamp인지 확인 후 처리
+vline_timestamp = historical_data['저장시간'].iloc[-1]
+
+# 필요시 형식 변환 (예: str로 변환)
+if isinstance(vline_timestamp, pd.Timestamp):
+    vline_timestamp = vline_timestamp.to_pydatetime()  # 또는 .isoformat()
+
 # 페이지 설정
 st.set_page_config(
     page_title="익산 토마토셋 대시보드",
