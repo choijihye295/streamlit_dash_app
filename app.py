@@ -128,6 +128,7 @@ def create_metric_card(label, value):
             <div class="metric-value">{value}</div>
         </div>
     """
+
 def create_combined_graph(historical_data, prediction_data):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
@@ -175,20 +176,19 @@ def create_combined_graph(historical_data, prediction_data):
         secondary_y=True,
     )
 
-    # 현재 시점을 나타내는 수직선 추가
-    current_time = historical_data['저장시간'].iloc[-1]
+    # 레이아웃 업데이트
     fig.update_layout(
-        margin=dict(l=50, r=50, t=30, b=30),
-        height=600,
+        margin=dict(l=40, r=40, t=30, b=30),
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font=dict(size=12),
+        font=dict(size=10),
         legend=dict(
             orientation="h",
             yanchor="bottom",
             y=1.02,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(size=8)
         ),
         xaxis=dict(
             showgrid=True,
@@ -196,8 +196,7 @@ def create_combined_graph(historical_data, prediction_data):
             showline=True,
             linewidth=1,
             linecolor='lightgray',
-            rangeslider=dict(visible=True),  # 가로 스크롤 활성화
-            tickformat="%H:%M"  # 시간 포맷
+            tickfont=dict(size=8)
         ),
         yaxis=dict(
             showgrid=True,
@@ -205,51 +204,31 @@ def create_combined_graph(historical_data, prediction_data):
             showline=True,
             linewidth=1,
             linecolor='lightgray',
-            title_text="온도 (°C)"
+            title_text="온도 (°C)",
+            tickfont=dict(size=8),
+            title_font=dict(size=10)
         ),
         yaxis2=dict(
             showgrid=False,
             showline=True,
             linewidth=1,
             linecolor='lightgray',
-            title_text="습도 (%)"
-        ),
-        shapes=[
-            dict(
-                type="line",
-                xref="x",
-                yref="paper",
-                x0=current_time,
-                y0=0,
-                x1=current_time,
-                y1=1,
-                line=dict(
-                    color="gray",
-                    width=1,
-                    dash="dot",
-                )
-            )
-        ],
-        annotations=[
-            dict(
-                x=current_time,
-                y=1.05,
-                xref="x",
-                yref="paper",
-                text="현재",
-                showarrow=False,
-                font=dict(size=12)
-            )
-        ]
+            title_text="습도 (%)",
+            tickfont=dict(size=8),
+            title_font=dict(size=10)
+        )
     )
 
-    # y축 제목 설정
-    fig.update_yaxes(title_text="온도 (°C)", secondary_y=False)
-    fig.update_yaxes(title_text="습도 (%)", secondary_y=True)
+    # 예측 구간을 구분하는 수직선 추가
+    fig.add_vline(
+        x=historical_data['저장시간'].iloc[-1].to_pydatetime(),  # 수정된 부분
+        line_dash="dot", 
+        line_color="gray",
+        annotation_text="현재",
+        annotation_position="top"
+    )
 
     return fig
-
-
 
 
 def main():
