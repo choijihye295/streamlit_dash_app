@@ -87,7 +87,39 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 기존 데이터 함수들은 동일하게 유지...
+def get_sensor_data(target_time):
+    data = {
+        'internal_temp': 21.1,
+        'internal_humidity': 60.8,
+        'external_temp': 15.4,
+        'wind_direction': '좌',
+        'wind_speed': 1.1,
+        'dew_point': 12.7,
+        'solar_radiation': 247
+    }
+    return data
+
+def get_historical_data():
+    data = {
+        '저장시간': pd.date_range(start='2018-05-10 09:30:00',
+                              end='2018-05-10 10:00:00', freq='1min'),
+        '내부온도': [19.5, 19.5, 19.6, 19.6, 19.7, 19.7, 19.7, 19.8, 19.8, 19.8,
+                  19.8, 19.8, 19.8, 19.8, 19.8, 19.9, 19.9, 20.1, 20.2, 20.3,
+                  20.4, 20.6, 20.9, 21.1, 21.3, 21.3, 21.3, 21.3, 21.2, 21.2, 21.1],
+        '내부습도': [65.6, 65.5, 64.9, 64.9, 64.2, 64.2, 64.7, 64.2, 63.6, 63.5,
+                  63.5, 63.5, 63.5, 63.2, 63.2, 62.5, 62.9, 63.8, 63.6, 63.9,
+                  63.1, 61.9, 61.4, 61.6, 61.6, 61.3, 61.0, 60.9, 60.7, 60.6, 60.8]
+    }
+    return pd.DataFrame(data)
+
+def get_prediction_data():
+    data = {
+        '예측시간': pd.date_range(start='2018-05-10 10:00:00',
+                              end='2018-05-10 10:05:00', freq='1min'),
+        '예측온도': [21.1, 21.2, 21.3, 21.4, 21.5, 21.6],
+        '예측습도': [60.8, 60.5, 60.2, 59.9, 59.6, 59.3]
+    }
+    return pd.DataFrame(data)
 
 def create_metric_card(label, value):
     return f"""
@@ -100,7 +132,50 @@ def create_metric_card(label, value):
 def create_combined_graph(historical_data, prediction_data):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-    # 기존 트레이스 추가 코드는 동일...
+     # 실제 온도 데이터
+    fig.add_trace(
+        go.Scatter(
+            x=historical_data['저장시간'],
+            y=historical_data['내부온도'],
+            name="실제 온도",
+            line=dict(color="#FF4B4B", width=2)
+        ),
+        secondary_y=False,
+    )
+
+    # 예측 온도 데이터
+    fig.add_trace(
+        go.Scatter(
+            x=prediction_data['예측시간'],
+            y=prediction_data['예측온도'],
+            name="예측 온도",
+            line=dict(color="#FF4B4B", width=2, dash='dash')
+        ),
+        secondary_y=False,
+    )
+
+    # 실제 습도 데이터
+    fig.add_trace(
+        go.Scatter(
+            x=historical_data['저장시간'],
+            y=historical_data['내부습도'],
+            name="실제 습도",
+            line=dict(color="#4B4BFF", width=2)
+        ),
+        secondary_y=True,
+    )
+
+    # 예측 습도 데이터
+    fig.add_trace(
+        go.Scatter(
+            x=prediction_data['예측시간'],
+            y=prediction_data['예측습도'],
+            name="예측 습도",
+            line=dict(color="#4B4BFF", width=2, dash='dash')
+        ),
+        secondary_y=True,
+    )
+
 
     # 모바일에 맞는 차트 크기 설정 (9:16 비율)
     chart_width = 360  # 모바일 기준 너비
@@ -149,6 +224,13 @@ def create_combined_graph(historical_data, prediction_data):
             title_font=dict(size=10)
         )
     )
+
+    # 예측 구간을 구분하는 수직선 추가
+    fig.add_vline(x=historical_data['저장시간'].iloc[-1], 
+                 line_dash="dot", 
+                 line_color="gray",
+                 annotation_text="현재",
+                 annotation_position="top")
 
     return fig
 
