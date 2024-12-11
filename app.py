@@ -4,13 +4,6 @@ import datetime
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# `저장시간`이 Timestamp인지 확인 후 처리
-vline_timestamp = historical_data['저장시간'].iloc[-1]
-
-# 필요시 형식 변환 (예: str로 변환)
-if isinstance(vline_timestamp, pd.Timestamp):
-    vline_timestamp = vline_timestamp.to_pydatetime()  # 또는 .isoformat()
-
 # 페이지 설정
 st.set_page_config(
     page_title="익산 토마토셋 대시보드",
@@ -139,7 +132,7 @@ def create_metric_card(label, value):
 def create_combined_graph(historical_data, prediction_data):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-     # 실제 온도 데이터
+    # 실제 온도 데이터
     fig.add_trace(
         go.Scatter(
             x=historical_data['저장시간'],
@@ -183,25 +176,19 @@ def create_combined_graph(historical_data, prediction_data):
         secondary_y=True,
     )
 
-
-    # 모바일에 맞는 차트 크기 설정 (9:16 비율)
-    chart_width = 360  # 모바일 기준 너비
-    chart_height = int(chart_width * 16/9)  # 9:16 비율
-
     # 레이아웃 업데이트
     fig.update_layout(
         margin=dict(l=40, r=40, t=30, b=30),
-        height=chart_height,
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font=dict(size=10),  # 폰트 크기 감소
+        font=dict(size=10),
         legend=dict(
             orientation="h",
             yanchor="bottom",
             y=1.02,
             xanchor="right",
             x=1,
-            font=dict(size=8)  # 범례 폰트 크기 감소
+            font=dict(size=8)
         ),
         xaxis=dict(
             showgrid=True,
@@ -209,7 +196,7 @@ def create_combined_graph(historical_data, prediction_data):
             showline=True,
             linewidth=1,
             linecolor='lightgray',
-            tickfont=dict(size=8)  # x축 레이블 크기 감소
+            tickfont=dict(size=8)
         ),
         yaxis=dict(
             showgrid=True,
@@ -218,8 +205,8 @@ def create_combined_graph(historical_data, prediction_data):
             linewidth=1,
             linecolor='lightgray',
             title_text="온도 (°C)",
-            tickfont=dict(size=8),  # y축 레이블 크기 감소
-            title_font=dict(size=10)  # y축 제목 크기 감소
+            tickfont=dict(size=8),
+            title_font=dict(size=10)
         ),
         yaxis2=dict(
             showgrid=False,
@@ -233,13 +220,16 @@ def create_combined_graph(historical_data, prediction_data):
     )
 
     # 예측 구간을 구분하는 수직선 추가
-    fig.add_vline(x=historical_data['저장시간'].iloc[-1], 
-                 line_dash="dot", 
-                 line_color="gray",
-                 annotation_text="현재",
-                 annotation_position="top")
+    fig.add_vline(
+        x=historical_data['저장시간'].iloc[-1].to_pydatetime(),  # 수정된 부분
+        line_dash="dot", 
+        line_color="gray",
+        annotation_text="현재",
+        annotation_position="top"
+    )
 
     return fig
+
 
 def main():
     # 현재 시간 표시
