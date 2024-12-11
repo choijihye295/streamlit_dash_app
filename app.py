@@ -284,6 +284,8 @@ def main():
     # 센서 데이터 가져오기
     sensor_data = get_sensor_data(target_time)
 
+    st.header('', anchor=False)
+
     # 1. 내부 환경 데이터 - 모바일에서는 한 열로 표시
     st.subheader('내부 환경', anchor=False)
     col1, col2 = st.columns([1, 1], gap="small")
