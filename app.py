@@ -265,13 +265,14 @@ def main():
 
     # 1. 내부 환경 데이터 - 모바일에서는 한 열로 표시
     st.subheader('내부 환경', anchor=False)
-    col1 = st.columns(2)
+    col1, col2 = st.columns(2)
     
     with col1:
         st.markdown(
             create_metric_card("내부 온도", f"{sensor_data['internal_temp']} °C"),
             unsafe_allow_html=True
         )
+    with col2:
         st.markdown(
             create_metric_card("내부 습도", f"{sensor_data['internal_humidity']} %"),
             unsafe_allow_html=True
