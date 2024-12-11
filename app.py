@@ -31,7 +31,6 @@ st.markdown("""
                 flex-wrap: nowrap !important;
                 gap: 0.5rem !important;
             }
-            /* 열 사이의 간격 조정 */
             .row-widget.stHorizontalBlock > div {
                 flex: 1 1 calc(50% - 0.5rem) !important;
                 min-width: calc(50% - 0.5rem) !important;
@@ -40,6 +39,10 @@ st.markdown("""
                 width: calc(50% - 0.5rem) !important;
                 flex: 1 1 calc(50% - 0.5rem) !important;
                 min-width: calc(50% - 0.5rem) !important;
+            }
+            /* 모바일에서의 내부환경 제목 마진 */
+            .internal-env-title {
+                margin-top: 2rem !important;
             }
         }
         
@@ -85,6 +88,10 @@ st.markdown("""
         .custom-title {
             margin-bottom: 1rem;
         }
+        /* 내부환경 제목 마진 추가 */
+        .internal-env-title {
+            margin-top: 3rem;
+        }
         
         /* Streamlit 기본 패딩 제거 */
         .css-1y4p8pa {
@@ -93,12 +100,12 @@ st.markdown("""
         .css-1r6slb0 {
             padding: 0 !important;
         }
-        /* 열 간격 조정 */
         .css-12w0qpk {
             gap: 0.5rem !important;
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 def get_sensor_data(target_time):
     data = {
