@@ -11,41 +11,41 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# CSS로 모바일 최적화 및 여백 조정
+# CSS 스타일 수정
 st.markdown("""
     <style>
+        /* 모바일 최적화 */
         @media (max-width: 768px) {
             .main > div {
-                padding-top: 0.5rem;
-                padding-bottom: 0.5rem;
+                padding: 0 !important;
             }
             .block-container {
-                padding: 0.5rem 1rem;
+                padding: 0.5rem !important;
+                max-width: none !important;
             }
             .metric-container {
-                padding: 0.75rem;
-                margin-bottom: 0.5rem;
+                margin: 0.3rem 0 !important;
+                padding: 0.75rem !important;
             }
-            .metric-label {
-                font-size: 0.9rem;
+            .row-widget.stHorizontalBlock {
+                flex-wrap: nowrap !important;
+                gap: 0.5rem !important;
             }
-            .metric-value {
-                font-size: 1.2rem;
+            /* 열 사이의 간격 조정 */
+            .row-widget.stHorizontalBlock > div {
+                flex: 1 1 calc(50% - 0.5rem) !important;
+                min-width: calc(50% - 0.5rem) !important;
             }
-            .time-display {
-                font-size: 0.8rem;
-                padding: 0.3rem 0.6rem;
-                top: 0.3rem;
-                right: 0.5rem;
-            }
-            .stMarkdown {
-                overflow: hidden;  /* 스크롤 제거 */
+            [data-testid="column"] {
+                width: calc(50% - 0.5rem) !important;
+                flex: 1 1 calc(50% - 0.5rem) !important;
+                min-width: calc(50% - 0.5rem) !important;
             }
         }
         
+        /* 공통 스타일 */
         .main > div {
-            padding-top: 1rem;
-            padding-bottom: 1rem;
+            padding: 1rem;
         }
         .block-container {
             padding: 1rem 2rem;
@@ -56,7 +56,9 @@ st.markdown("""
             padding: 1rem;
             border-radius: 0.5rem;
             text-align: center;
-            margin: 0.5rem;
+            height: 100%;
+            margin: 0.5rem 0;
+            box-sizing: border-box;
         }
         .metric-label {
             color: #666;
@@ -82,6 +84,18 @@ st.markdown("""
         }
         .custom-title {
             margin-bottom: 1rem;
+        }
+        
+        /* Streamlit 기본 패딩 제거 */
+        .css-1y4p8pa {
+            padding: 0 !important;
+        }
+        .css-1r6slb0 {
+            padding: 0 !important;
+        }
+        /* 열 간격 조정 */
+        .css-12w0qpk {
+            gap: 0.5rem !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -265,7 +279,7 @@ def main():
 
     # 1. 내부 환경 데이터 - 모바일에서는 한 열로 표시
     st.subheader('내부 환경', anchor=False)
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1], gap="small")
     
     with col1:
         st.markdown(
@@ -280,7 +294,7 @@ def main():
 
     # 2. 외부 환경 데이터 - 모바일에서는 2열로 표시
     st.subheader('외부 환경', anchor=False)
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1], gap="small")
     
     metrics = [
         ("외부 온도", f"{sensor_data['external_temp']} °C"),
